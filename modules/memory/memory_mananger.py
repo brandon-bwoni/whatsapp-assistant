@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 
 
 from constants.prompts import MEMORY_ANALYSIS_PROMPT
-from vector_store import get_vector_store
+from .vector_store import get_vector_store
 from settings import settings
 
 

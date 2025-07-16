@@ -1,13 +1,22 @@
+import os
+import sys
+# Add the project root to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+
+
 from io import BytesIO
 
 import chainlit as cl
 from langchain_core.messages import AIMessageChunk, HumanMessage
 from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 
-from graph import graph_builder
-from modules.image import ImageToText
-from modules.speech import SpeechToText, TextToSpeech
-from ai_companion import settings
+from graph.graph import create_workflow_graph as graph_builder
+from modules.image.image_to_text import ImageToText
+from modules.speech.speech_to_text import SpeechToText
+from modules.speech.text_to_speech import  TextToSpeech
+from settings import settings
+
+os.makedirs(os.path.dirname(settings.SHORT_TERM_MEMORY_DB_PATH), exist_ok=True)
 
 # Global module instances
 speech_to_text = SpeechToText()
@@ -52,7 +61,7 @@ async def on_message(message: cl.Message):
 
     async with cl.Step(type="run"):
         async with AsyncSqliteSaver.from_conn_string(settings.SHORT_TERM_MEMORY_DB_PATH) as short_term_memory:
-            graph = graph_builder.compile(checkpointer=short_term_memory)
+            graph = graph_builder().compile(checkpointer=short_term_memory)
             async for chunk in graph.astream(
                 {"messages": [HumanMessage(content=content)]},
                 {"configurable": {"thread_id": thread_id}},
@@ -82,7 +91,7 @@ async def on_message(message: cl.Message):
 
 
 @cl.on_audio_chunk
-async def on_audio_chunk(chunk: cl.AudioChunk):
+async def on_audio_chunk(chunk: cl.InputAudioChunk):
     """Handle incoming audio chunks"""
     if chunk.isStart:
         buffer = BytesIO()

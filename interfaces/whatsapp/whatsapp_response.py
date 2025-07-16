@@ -8,9 +8,10 @@ from fastapi import APIRouter, Request, Response
 from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 
-from graph import graph_builder
-from modules.image import ImageToText
-from modules.speech import SpeechToText, TextToSpeech
+from graph.graph import create_workflow_graph as graph_builder
+from modules.image.image_to_text import ImageToText
+from modules.speech.speech_to_text import SpeechToText
+from modules.speech.text_to_speech import TextToSpeech
 from settings import settings
 
 logger = logging.getLogger(__name__)

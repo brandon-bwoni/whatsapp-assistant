@@ -1,7 +1,7 @@
 from langgraph.graph import END
 from typing_extensions import Literal
 
-from graph.state import AICompanionState
+from .state import AICompanionState
 from settings import settings
 
 

@@ -14,7 +14,8 @@ from graph.utils.helpers import (
     get_text_to_image_module,
     get_text_to_speech_module,
 )
-from modules.memory_manager import get_memory_manager
+
+from modules.memory.memory_mananger import get_memory_manager
 from modules.schedules.context_generation import ScheduleContextGenerator
 from settings import settings
 
